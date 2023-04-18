@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apimServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the API Management"
+      }
+    },
+    "linkedTemplatesBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Base URL of the repository that contains the generated templates"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2022-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "globalServicePolicyTemplate",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('linkedTemplatesBaseUrl'), 'NIA-APIM-DV-globalServicePolicy.template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimServiceName": {
+            "value": "[parameters('apimServiceName')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2022-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "productsTemplate",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('linkedTemplatesBaseUrl'), 'NIA-APIM-DV-products.template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimServiceName": {
+            "value": "[parameters('apimServiceName')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2022-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "apisTemplate",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'globalServicePolicyTemplate')]",
+        "[resourceId('Microsoft.Resources/deployments', 'productsTemplate')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('linkedTemplatesBaseUrl'), 'NIA-APIM-DV-echo-api-api.template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimServiceName": {
+            "value": "[parameters('apimServiceName')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2022-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "productAPIsTemplate",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'productsTemplate')]",
+        "[resourceId('Microsoft.Resources/deployments', 'apisTemplate')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('linkedTemplatesBaseUrl'), 'NIA-APIM-DV-productAPIs.template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimServiceName": {
+            "value": "[parameters('apimServiceName')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2022-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "groupsTemplate",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('linkedTemplatesBaseUrl'), 'NIA-APIM-DV-groups.template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimServiceName": {
+            "value": "[parameters('apimServiceName')]"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apimServiceName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2021-08-01",
+      "type": "Microsoft.ApiManagement/service",
+      "name": "[concat(parameters('apimServiceName'))]",
+      "location": "East US",
+      "tags": {},
+      "sku": {
+        "capacity": 1,
+        "name": "Developer"
+      },
+      "properties": {
+        "apiVersionConstraint": {},
+        "certificates": [
+          {
+            "certificate": {
+              "expiry": "2045-09-17T16:38:38+00:00",
+              "subject": "CN=NIH-DPKI-ROOT-1A, O=NIH, C=US",
+              "thumbprint": "CE432244A6DA633144C4DEC6E7E55D835D8A7D8F"
+            },
+            "storeName": "Root"
+          }
+        ],
+        "customProperties": {
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168": "false",
+          "microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Ssl30": "false"
+        },
+        "disableGateway": false,
+        "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
+        "platformVersion": "stv2",
+        "privateIPAddresses": [
+          "10.253.211.69"
+        ],
+        "provisioningState": "Succeeded",
+        "publicIpAddressId": "/subscriptions/21301da3-752f-466e-b5ad-07772161bf0f/resourceGroups/NIA-APIM-DV/providers/Microsoft.Network/publicIPAddresses/nia-apim-dv-pip",
+        "publicNetworkAccess": "Enabled",
+        "publisherEmail": "joseph.brauch@nih.gov",
+        "publisherName": "NIA",
+        "restore": false,
+        "targetProvisioningState": "",
+        "virtualNetworkConfiguration": {
+          "subnetResourceId": "/subscriptions/21301da3-752f-466e-b5ad-07772161bf0f/resourceGroups/NIA_to_Azure_VPN/providers/Microsoft.Network/virtualNetworks/VPN_VNET1/subnets/APIMDev2",
+          "vnetid": "00000000-0000-0000-0000-000000000000"
+        },
+        "virtualNetworkType": "Internal"
+      }
+    }
+  ]
+}
